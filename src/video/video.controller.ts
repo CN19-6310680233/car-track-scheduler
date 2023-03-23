@@ -20,7 +20,7 @@ export class VideoController {
     async uploadVideo(
         @Body()
         data: VideoDTO,
-        @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: /(avi|mov|wmv|mp4)/}).build())
+        @UploadedFile()
         file: Express.Multer.File
     ) {
         const fileExt = path.extname(file.originalname);
