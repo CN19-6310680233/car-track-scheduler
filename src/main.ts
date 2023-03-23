@@ -17,7 +17,7 @@ async function bootstrap() {
   });
 
   app.use(bodyParser.json({limit: '10mb'}));
-  app.use(bodyParser.urlencoded({limit: '10mb'}));
+  app.use(bodyParser.urlencoded({extended:true, limit: '10mb'}));
 
   app.enableVersioning({
     type: VersioningType.URI,
