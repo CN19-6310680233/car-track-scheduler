@@ -7,6 +7,7 @@ import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { getConnection } from './config/redis';
 import { VIDEO_QUEUE } from './config/queue';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import bodyParser from 'body-parser';
 const Queue = require("bull");
 require('dotenv').config()
 
@@ -14,6 +15,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
     cors: true
   });
+
+  app.use(bodyParser.json({limit: '10mb'}));
+  app.use(bodyParser.urlencoded({limit: '10mb'}));
+
   app.enableVersioning({
     type: VersioningType.URI,
   });
