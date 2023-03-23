@@ -7,7 +7,7 @@ import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { getConnection } from './config/redis';
 import { VIDEO_QUEUE } from './config/queue';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import bodyParser from 'body-parser';
+const bodyParser = require('body-parser');
 const Queue = require("bull");
 require('dotenv').config()
 
