@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseFilePipeBuilder, ParseIntPipe, Post, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, ParseFilePipeBuilder, ParseIntPipe, Post, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
@@ -20,7 +20,12 @@ export class VideoController {
     async uploadVideo(
         @Body()
         data: VideoDTO,
-        @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: /(avi|mov|wmv|mp4)/}).build())
+        // @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: /(avi|mov|wmv|mp4)/}).build())
+        @UploadedFile(new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({fileType: /\.(avi|mov|wmv|mp4)$/}),
+            ],
+        }))
         file: Express.Multer.File
     ) {
         const fileExt = path.extname(file.originalname);
