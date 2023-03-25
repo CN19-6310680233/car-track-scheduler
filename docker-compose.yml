@@ -16,7 +16,7 @@ services:
       - "3003:3003"
     volumes:
       - ".:/app/"
-    command: yarn start:prod
+    command: sh -c "yarn && yarn start:prod"
     environment:
       - TZ=Asia/Bangkok
 volumes:
