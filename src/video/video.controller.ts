@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, ParseFilePipeBuilder, ParseIntPipe, Post, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
+import { BadRequestException, Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, ParseFilePipeBuilder, ParseIntPipe, Post, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
@@ -21,14 +21,12 @@ export class VideoController {
         @Body()
         data: VideoDTO,
         // @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: /(avi|mov|wmv|mp4)/}).build())
-        @UploadedFile(new ParseFilePipe({
-            validators: [
-                new FileTypeValidator({fileType: /\.(avi|mov|wmv|mp4)$/}),
-            ],
-        }))
+        @UploadedFile()
         file: Express.Multer.File
     ) {
         const fileExt = path.extname(file.originalname);
+        const mimeType = file.mimetype;
+        if(!mimeType.startsWith('video/')) throw new BadRequestException(["File is not video type"]);
         const fileName = `${crypto.randomUUID()}${fileExt}`;
         const skipBuildFolder = __dirname.includes('dist') ? '..' : '';
         const uploadsDir = path.join(__dirname, '..', skipBuildFolder, 'public', 'uploads');
