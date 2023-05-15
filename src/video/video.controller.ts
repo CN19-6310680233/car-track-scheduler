@@ -26,7 +26,7 @@ export class VideoController {
     ) {
         const fileExt = path.extname(file.originalname);
         const mimeType = file.mimetype;
-        if(!mimeType.startsWith('video/')) throw new BadRequestException(["File is not video type"]);
+        // if(!mimeType.startsWith('video/')) throw new BadRequestException(["File is not video type"]);
         const fileName = `${crypto.randomUUID()}${fileExt}`;
         const skipBuildFolder = __dirname.includes('dist') ? '..' : '';
         const uploadsDir = path.join(__dirname, '..', skipBuildFolder, 'public', 'uploads');
