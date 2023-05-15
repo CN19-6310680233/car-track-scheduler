@@ -8,7 +8,9 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes: 
       - cache:/data
-  app:
+    networks:
+      - cn332
+  scheduler:
     image: node:16
     working_dir: /app
     restart: always
@@ -19,6 +21,10 @@ services:
     command: sh -c "yarn && yarn build && yarn start:prod"
     environment:
       - TZ=Asia/Bangkok
+    networks:
+      - cn332
 volumes:
   cache:
     driver: local
+networks: 
+  cn332:
