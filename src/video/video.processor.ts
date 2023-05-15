@@ -11,21 +11,28 @@ export class VideoProcessor {
     const { filePath } = data;
 
     // Process the video file
-    for(let i = 0; i < 100; i ++) {
-      await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 500)));
-      await job.progress(i)
-    }
-    await job.progress(100);
-
-    const webhookParams = {
-      job_id: job.id,
+    let webhookResponse = {
+      job_id: id,
       result: {
         frame: Math.floor(Math.random() * 200), 
         count: Math.floor(Math.random() * 100),
         file_name: filePath,
+        mock: true,
       }
     };
-    const webhook = await axios.post(process.env.WEBHOOK_API_ENDPOINT, webhookParams).then(data => {
+
+    if(!process.env.TRACKER_ENGINE_API) {
+      for(let i = 0; i < 100; i ++) {
+        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 500)));
+        await job.progress(i);
+      }
+    } else{
+      webhookResponse.result = await axios.post(process.env.TRACKER_ENGINE_API, webhookResponse).then(data => data.data)
+      .catch(err => null);
+    }
+    await job.progress(100);
+
+    const webhook = await axios.post(process.env.WEBHOOK_API_ENDPOINT, webhookResponse).then(data => {
       return data.data;
     }).catch(err => null);
     
